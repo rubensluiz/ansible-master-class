@@ -1,0 +1,47 @@
+---
+- name: Provisionamento comum a todas as maquinas
+  hosts: all
+  become: True
+  gather_facts: False
+  
+  tasks:
+    - name: certifica que o cowsay esta desinstalado
+      apt: name=cowsay state=absent
+
+- hosts: lb
+  name: Provisionamento do load balancer
+  become: True
+  gather_facts: False
+  tasks:
+    - name: certifica que o haproxy esta instalado
+      apt:
+        name: haproxy
+        state: present
+        update_cache: True
+    - name: certifica que o haproxy esta iniciado e habilitado na inicializacao
+      service:
+        name: haproxy
+        state: started
+        enabled: True
+
+- hosts: web
+  name: provisionamento dos webservers
+  become: True
+  gather_facts: False
+  tasks:
+    - name: certifica que o apache esta instalado
+      package:
+        name: apache2
+        state: present
+    - name: certifica que o apache esta iniciado e habilitado na inicializacao
+      service:
+        name: apache2
+        state: started
+        enabled: True
+    - name: pagina inicial do apache
+      lineinfile:
+        path: /var/www/html/index.html
+        state: present
+        line: Ola mundo
+        owner: www-data
+        mode: 0440
