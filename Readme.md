@@ -1,6 +1,6 @@
 # Ansible master class
 
-### Tollset
+### Toolset
 * [Vagrant](https://www.vagrantup.com/downloads)
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 * [Python](https://www.python.org/downloads/)
