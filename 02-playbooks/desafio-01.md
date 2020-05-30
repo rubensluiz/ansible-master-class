@@ -1,4 +1,4 @@
-# instalação do wordpress
+# Instalação do wordpress
 
 - instalar apache, php, mysql
 - download do wordpress (https://wordpress.org/latest.tar.gz)

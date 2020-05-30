@@ -3,7 +3,6 @@
   hosts: all
   become: True
   gather_facts: False
-  
   tasks:
     - name: certifica que o cowsay esta desinstalado
       apt: name=cowsay state=absent
