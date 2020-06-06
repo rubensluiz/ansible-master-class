@@ -1,0 +1,30 @@
+---
+
+- hosts: db
+  gather_facts: true
+
+- hosts: web
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Gera index.html
+      template:
+        src: index.html.j2
+        dest: /var/www/html/index.html
+
+- hosts: lb
+  become: true
+  gather_facts: true
+  handlers:
+    - name: restart haproxy
+      service:
+        name: haproxy
+        state: restarted
+  tasks:
+    - name: Gera haproxy config
+      template:
+        src: haproxy.cfg.j2
+        dest: /etc/haproxy/haproxy.cfg
+        validate: haproxy -c -f %s
+      notify: restart haproxy
+

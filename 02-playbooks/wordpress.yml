@@ -1,0 +1,50 @@
+- name: install wordpress
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    wordpress_db: wordpress
+    wordpress_db_user: wordpress
+    wordpress_db_host: localhost
+    wordpress_db_pass: abc123
+  tasks:
+    - name: instala softwares
+      apt:
+        name: '{{ item }}'
+        state: present
+        update_cache: true
+      loop:
+        - mysql-server
+        - php7.2-mysql
+        - libapache2-mod-php7.2
+        - python-mysqldb
+        - python-pymysql
+
+    - name: cria banco do wordpress
+      mysql_db:
+        name: wordpress
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        state: present
+    
+    - name: cria usuario do wordpress
+      mysql_user:
+        name: "{{wordpress_db_user}}"
+        password: "{{wordpress_db_pass}}"
+        priv: 'wordpress.*:ALL'
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        state: present
+      no_log: true
+    
+    - name: descompact wordpress
+      unarchive:
+        src: https://br.wordpress.org/latest-pt_BR.tar.gz
+        dest: /var/www/html/
+        remote_src: yes
+    
+    - name: configura wordpress
+      template:
+        src: wp-config.php.j2
+        dest: /var/www/html/wordpress/wp-config.php
+
+        

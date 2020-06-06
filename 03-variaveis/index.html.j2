@@ -1,0 +1,3 @@
+Hostname: {{ ansible_hostname }} <br>
+Interfaces: {% for iface in ansible_interfaces %} {{ iface }} {% endfor %} <br>
+Servidor de Banco: {% for server in groups['db'] %} {{ hostvars[server]['ansible_enp0s8']['ipv4']['address'] }} {%endfor%}
